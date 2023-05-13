@@ -1,9 +1,9 @@
 package com.sample.weather;
 
 public class Weather {
-    String cityName;
-    double temperature;
-    double humidity;
+    final String cityName;
+    final double temperature;
+    final double humidity;
 
     public Weather(String name, double temperature, double humidity) {
         this.cityName = name;

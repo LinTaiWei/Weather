@@ -17,7 +17,7 @@ public class WeatherData {
         return weatherInfo;
     }
 
-    public class WeatherInfo {
+    public static class WeatherInfo {
         @SerializedName("temp")
         private double temperature;
 

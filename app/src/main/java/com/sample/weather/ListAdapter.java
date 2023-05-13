@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder> {
 
-    ArrayList<Weather> items = new ArrayList<>();
+    final ArrayList<Weather> items = new ArrayList<>();
 
     public ListAdapter() {
     }
@@ -40,8 +40,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         items.add(person);
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView cityNameTextView, temperatureTextView, humidityTextView;
+    static class ItemViewHolder extends RecyclerView.ViewHolder {
+        final TextView cityNameTextView;
+        final TextView temperatureTextView;
+        final TextView humidityTextView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);

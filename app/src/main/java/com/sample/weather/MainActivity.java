@@ -1,8 +1,9 @@
 package com.sample.weather;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     ListAdapter adapter;
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private static final String API_KEY = "2cfe1a8d1a71f9ff0e86d0fb1bc55e2d";
-    private MyAPIService myAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-        //RecyclerView의 Adapter 세팅
         adapter = new ListAdapter();
         recyclerView.setAdapter(adapter);
 
@@ -44,26 +43,27 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         // 建立 API Service 實例
-        myAPIService = retrofit.create(MyAPIService.class);
+        MyAPIService myAPIService = retrofit.create(MyAPIService.class);
         String[] cities = {"Taipei", "Taoyuan", "Hsinchu", "Miaoli"};
         // 發送 API 請求
         for (String city : cities) {
             Call<WeatherData> call = myAPIService.getCurrentWeather(city, API_KEY);
             call.enqueue(new Callback<WeatherData>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
-                public void onResponse(Call<WeatherData> call, Response<WeatherData> response) {
+                public void onResponse(@NonNull Call<WeatherData> call, @NonNull Response<WeatherData> response) {
                     if (response.isSuccessful()) {
                         WeatherData weatherData = response.body();
+                        assert weatherData != null;
                         double celsius = weatherData.getWeatherInfo().getTemperature() - 273.15;
                         Weather item = new Weather(weatherData.getCityName(), celsius, weatherData.getWeatherInfo().getHumidity());
                         adapter.addItem(item);
                         adapter.notifyDataSetChanged();
-                        Log.i("qwer", "getCityName: " + weatherData.getCityName());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<WeatherData> call, Throwable t) {
+                public void onFailure(@NonNull Call<WeatherData> call, @NonNull Throwable t) {
                 }
             });
         }
